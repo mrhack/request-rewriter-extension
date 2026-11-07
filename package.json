@@ -1,0 +1,11 @@
+{
+  "name": "request-rewriter-extension",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "jsdom": "^29.1.1"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Request Rewriter",
+  "version": "0.2.0",
+  "description": "按规则修改请求头。",
+  "permissions": ["storage", "declarativeNetRequest"],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_title": "Request Rewriter",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  }
+}

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #3a3a5a; }
+  * { scrollbar-width: thin; scrollbar-color: #2a2a4a transparent; }
+  html { margin: 0; padding: 0; background: #1a1a2e; }
+  body { margin: 0; padding: 0; border: none; font-family: system-ui, -apple-system, sans-serif; width: 400px; height: 600px; max-height: 600px; background: #1a1a2e; color: #eee; overflow: hidden; }
+</style>
+</head>
+<body>
+<div id="app" style="display: flex; flex-direction: column; width: 100%; height: 100%;">
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid #2a2a4a;">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <div id="rw-icon" style="width: 22px; height: 22px; border-radius: 6px; background: #555; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .2s;">
+        <span style="color: #fff; font-family: Arial, sans-serif; font-weight: bold; font-size: 15px; line-height: 1;">R</span>
+      </div>
+      <span style="font-size: 15px; font-weight: 600;">Request Rewriter</span>
+    </div>
+    <div style="display: flex; gap: 6px; align-items: center;">
+      <div id="toggle-btn" title="启用/停止插件" style="width: 36px; height: 20px; background: #2a2a4a; border-radius: 10px; position: relative; cursor: pointer; transition: background .2s; flex-shrink: 0;">
+        <div id="toggle-knob" style="position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: left .2s;"></div>
+      </div>
+      <button class="btn-import" title="导入配置" style="background: #0f3460; border: none; color: #eee; border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 12px;">📥</button>
+      <button class="btn-export" title="导出配置" style="background: #0f3460; border: none; color: #eee; border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 12px;">📤</button>
+      <button class="btn-new" title="新建配置" style="background: #e94560; border: none; color: #fff; border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 14px; font-weight: 600;">＋</button>
+    </div>
+  </div>
+  <div id="card-container" style="padding: 0 10px; flex: 1; min-height: 0; overflow-y: auto;"></div>
+</div>
+<script type="module" src="popup.js"></script>
+</body>
+</html>
