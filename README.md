@@ -1,27 +1,73 @@
-# Request Rewriter Chrome Extension
+# Request Rewriter
 
-## 安装
-1. 打开 `chrome://extensions/`
-2. 开启「开发者模式」
-3. 点击「加载已解压的扩展程序」，选择本目录
+A Chrome extension to rewrite HTTP request headers using the `declarativeNetRequest` API.
 
-## 使用
-1. 点击扩展图标打开 popup
-2. 点击 ＋ 新建配置，填写 URL 正则、勾选需要的修改项
-3. 点击 ✓ 保存（存入 chrome.storage.local）
-4. 点击「启用当前页」开始拦截（使用 Chrome Debugger API）
-5. 再次点击停止
+## Features
 
-## 功能
-- **修改请求**：Header（key-value 行）、Body（JSONPath 或 JS 函数）
-- **修改响应**：Header、Body（同上）
-- **URL 匹配**：正则表达式，空=全部请求
-- **配置管理**：新建/删除/保存/取消修改，导入/导出 JSON 文件
-- **持久化**：保存到 chrome.storage.local，popup 关闭后不丢失
-- **未保存标记**：有未保存修改时标题旁显示小黄点
-- **单配置展开**：同时只展开一个配置
+- **Request Header Modification** — Add or override request headers per rule using simple key-value pairs
+- **URL Pattern Matching** — Match requests by regex pattern; empty pattern matches all requests
+- **Per-Rule Toggle** — Enable or disable individual rules without deleting them
+- **Global Toggle** — Turn the entire extension on or off with a single switch
+- **Auto-Save** — All changes are automatically persisted to `chrome.storage.local`; no manual save needed
+- **Config Import/Export** — Export rules to JSON and import them on another machine
+- **Dynamic Toolbar Icon** — The "R" icon turns green when the extension is enabled and gray when disabled
+- **Collapsed Card Preview** — Configured header modifications are visible as tags on collapsed cards
+- **Test URL Matching** — Enter a test URL to verify whether it matches a rule's pattern in real time
 
-## 测试
+## Installation
+
+1. Open `chrome://extensions/`
+2. Enable **Developer mode** (top-right toggle)
+3. Click **Load unpacked** and select this project directory
+
+## Usage
+
+1. Click the extension icon in the toolbar to open the popup
+2. Click **＋** to create a new rule
+3. Enter a **URL regex** pattern (leave empty to match all requests)
+4. Add header rows under **Request Header** — each row has a key and value
+5. Use the toggle on each card to enable/disable that rule
+6. Use the top-bar toggle to enable/disable the entire extension
+7. All changes are saved automatically
+
+### Import / Export
+
+- Click **📥** to import rules from a JSON file
+- Click **📤** to export all rules to a JSON file
+
+## Data Model
+
+```json
+{
+  "rules": [
+    {
+      "id": "unique-id",
+      "name": "Rule name",
+      "enabled": true,
+      "matchPattern": "api/v1/.*",
+      "headerMods": {
+        "on": true,
+        "rows": [{ "k": "x-custom-header", "v": "value" }]
+      }
+    }
+  ]
+}
+```
+
+## Testing
+
 ```bash
 node --test
 ```
+
+## Tech Stack
+
+- Chrome Extension Manifest V3
+- `declarativeNetRequest` API for header rewriting (no debugger API)
+- `chrome.storage.local` for persistence
+- Pure JavaScript (no build step, no dependencies)
+- 42 unit tests covering rule logic and UI behavior
+
+## License
+
+MIT
