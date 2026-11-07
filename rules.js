@@ -20,7 +20,7 @@ export function matchingRules(rules, url) {
 export function emptyRule(name) {
   return {
     id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-    name: name || '新配置',
+    name: name || 'New Config',
     enabled: true,
     matchPattern: '',
     headerMods: { on: true, rows: [] }

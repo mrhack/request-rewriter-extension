@@ -87,10 +87,10 @@ describe('Initial Load (empty)', () => {
     assert.equal(dom.window.document.querySelectorAll('.card').length, 0);
   });
 
-  it('should show empty placeholder "暂无配置"', () => {
+  it('should show empty placeholder "No configurations"', () => {
     const ph = dom.window.document.getElementById('empty-placeholder');
     assert(ph, 'placeholder should exist');
-    assert.equal(ph.textContent, '暂无配置');
+    assert.equal(ph.textContent, 'No configurations');
   });
 
   it('should show toggle switch as off', () => {
@@ -179,7 +179,7 @@ describe('Delete Button', () => {
     assert.equal(dom.window.document.querySelectorAll('.card').length, 0);
     const ph = dom.window.document.getElementById('empty-placeholder');
     assert(ph);
-    assert.equal(ph.textContent, '暂无配置');
+    assert.equal(ph.textContent, 'No configurations');
   });
 });
 

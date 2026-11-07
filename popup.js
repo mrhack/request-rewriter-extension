@@ -80,7 +80,7 @@ function showEmptyPlaceholder() {
   var div = document.createElement('div');
   div.id = 'empty-placeholder';
   div.style.cssText = 'text-align:center;padding:40px 20px;color:#555;font-size:13px;';
-  div.textContent = '暂无配置';
+  div.textContent = 'No configurations';
   cardContainer.appendChild(div);
 }
 
@@ -92,11 +92,11 @@ function hideEmptyPlaceholder() {
 function createHeaderSectionHTML() {
   return '<div class="header-section" style="border:1px solid #2a2a4a;border-radius:8px;overflow:hidden;margin-top:10px;background:#16213e;">' +
     '<div style="padding:8px 10px;font-size:12px;border-bottom:1px solid #2a2a4a;">' +
-      '<span style="font-weight:500;color:#ccc;">请求 Header</span>' +
+      '<span style="font-weight:500;color:#ccc;">Request Headers</span>' +
     '</div>' +
     '<div class="mod-row-body" style="display:block;padding:10px 10px 8px;background:#111;">' +
       '<div class="header-rows" style="display:flex;flex-direction:column;gap:4px;"></div>' +
-      '<button class="add-header-row" style="width:100%;background:transparent;border:1px dashed #2a2a4a;color:#888;border-radius:8px;padding:6px;cursor:pointer;font-size:11px;margin-top:6px;">＋ 添加行</button>' +
+      '<button class="add-header-row" style="width:100%;background:transparent;border:1px dashed #2a2a4a;color:#888;border-radius:8px;padding:6px;cursor:pointer;font-size:11px;margin-top:6px;">＋ Add Row</button>' +
     '</div></div>';
 }
 
@@ -112,9 +112,9 @@ function createNewCard(rule) {
       '<div style="flex:1;min-width:0;">' +
         '<div style="display:flex;align-items:center;gap:8px;">' +
           '<span class="arrow" style="font-size:10px;color:#888;cursor:pointer;padding:4px 8px;margin:-4px -8px;">▶</span>' +
-          '<span class="card-title" style="font-weight:600;font-size:13px;outline:none;cursor:text;display:inline-block;" contenteditable="false">' + (rule.name || '新配置') + '</span>' +
+          '<span class="card-title" style="font-weight:600;font-size:13px;outline:none;cursor:text;display:inline-block;" contenteditable="false">' + (rule.name || 'New Config') + '</span>' +
         '</div>' +
-        '<div class="card-subtitle" style="font-size:11px;color:#888;margin-top:3px;margin-left:18px;">匹配: ' + ((rule.matchPattern || '').trim() || '全部请求') + '</div>' +
+        '<div class="card-subtitle" style="font-size:11px;color:#888;margin-top:3px;margin-left:18px;">Match: ' + ((rule.matchPattern || '').trim() || 'All requests') + '</div>' +
         '<div class="header-tags" style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;margin-left:18px;"></div>' +
       '</div>' +
       '<div class="toggle ' + (rule.enabled !== false ? 'on' : '') + '" style="width:36px;height:20px;background:' + (rule.enabled !== false ? '#00b894' : '#2a2a4a') + ';border-radius:10px;position:relative;flex-shrink:0;cursor:pointer;transition:background .2s;">' +
@@ -122,13 +122,13 @@ function createNewCard(rule) {
       '</div>' +
     '</div>' +
     '<div class="card-body" style="display:none;padding:0 12px 12px;border-top:1px solid #2a2a4a;">' +
-      '<div style="margin-top:8px;"><label style="display:block;font-size:11px;color:#888;margin-bottom:4px;">URL 正则（空=全部）</label>' +
+      '<div style="margin-top:8px;"><label style="display:block;font-size:11px;color:#888;margin-bottom:4px;">URL Regex (empty = all)</label>' +
         '<input class="regex-input" style="width:100%;background:#1a1a2e;border:1px solid #2a2a4a;color:#eee;border-radius:6px;padding:6px 8px;font-size:12px;box-sizing:border-box;" value="' + (rule.matchPattern || '') + '" /></div>' +
-      '<div style="margin-top:8px;"><label style="display:block;font-size:11px;color:#888;margin-bottom:4px;"><span>测试网址</span><span class="match-status" style="margin-left:8px;font-size:11px;"></span></label>' +
+      '<div style="margin-top:8px;"><label style="display:block;font-size:11px;color:#888;margin-bottom:4px;"><span>Test URL</span><span class="match-status" style="margin-left:8px;font-size:11px;"></span></label>' +
         '<input class="test-url-input" style="width:100%;background:#1a1a2e;border:1px solid #2a2a4a;color:#eee;border-radius:6px;padding:6px 8px;font-size:12px;box-sizing:border-box;" placeholder="https://api.example.com/api/v1/users/123" /></div>' +
       createHeaderSectionHTML() +
       '<div style="display:flex;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid #2a2a4a;">' +
-        '<button class="btn-delete" title="删除" style="flex:1;padding:7px;border:none;border-radius:8px;cursor:pointer;font-size:15px;font-weight:700;background:#0f3460;color:#e74c3c;">✕ 删除</button>' +
+        '<button class="btn-delete" title="Delete" style="flex:1;padding:7px;border:none;border-radius:8px;cursor:pointer;font-size:15px;font-weight:700;background:#0f3460;color:#e74c3c;">✕ Delete</button>' +
       '</div>' +
     '</div>';
   cardContainer.appendChild(card);
@@ -192,7 +192,7 @@ function bindCardEvents(card) {
   // Title edit
   var titleSpan = card.querySelector('.card-title');
   titleSpan.addEventListener('click', function(e) { e.stopPropagation(); this.contentEditable = 'true'; this.focus(); });
-  titleSpan.addEventListener('blur', function() { this.contentEditable = 'false'; this.textContent = this.textContent.trim() || '未命名'; autoSave(); });
+  titleSpan.addEventListener('blur', function() { this.contentEditable = 'false'; this.textContent = this.textContent.trim() || 'Untitled'; autoSave(); });
   titleSpan.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); this.blur(); } });
 
   // Enable toggle
@@ -208,7 +208,7 @@ function bindCardEvents(card) {
   // Regex subtitle update
   var regexInput = card.querySelector('.regex-input');
   if (regexInput) regexInput.addEventListener('input', function() {
-    var s = card.querySelector('.card-subtitle'); if (s) s.textContent = '匹配: ' + (this.value.trim() || '全部请求');
+    var s = card.querySelector('.card-subtitle'); if (s) s.textContent = 'Match: ' + (this.value.trim() || 'All requests');
   });
   // Test URL matching
   var testInput = card.querySelector('.test-url-input');
@@ -217,9 +217,9 @@ function bindCardEvents(card) {
     function testMatch() {
       var p = regexInput.value.trim(), u = testInput.value.trim();
       if (!u) { matchStatus.textContent = ''; return; }
-      if (!p) { matchStatus.textContent = '匹配全部'; matchStatus.style.color = '#888'; return; }
-      try { if (new RegExp(p).test(u)) { matchStatus.textContent = '匹配'; matchStatus.style.color = '#00b894'; } else { matchStatus.textContent = '不匹配'; matchStatus.style.color = '#e74c3c'; } }
-      catch(err) { matchStatus.textContent = '正则错误'; matchStatus.style.color = '#fdcb6e'; }
+      if (!p) { matchStatus.textContent = 'Matches all'; matchStatus.style.color = '#888'; return; }
+      try { if (new RegExp(p).test(u)) { matchStatus.textContent = 'Matched'; matchStatus.style.color = '#00b894'; } else { matchStatus.textContent = 'Not matched'; matchStatus.style.color = '#e74c3c'; } }
+      catch(err) { matchStatus.textContent = 'Regex error'; matchStatus.style.color = '#fdcb6e'; }
     }
     regexInput.addEventListener('input', testMatch);
     testInput.addEventListener('input', testMatch);
@@ -277,7 +277,7 @@ root.querySelector('.btn-import').addEventListener('click', function() {
         rules.forEach(function(r) { createNewCard(r); });
         allConfigs.rules = serializeAll();
         await saveConfigToStorage();
-      } catch(err) { alert('JSON 格式错误: ' + err.message); }
+      } catch(err) { alert('Invalid JSON: ' + err.message); }
     };
     reader.readAsText(file);
   });

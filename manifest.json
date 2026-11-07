@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Request Rewriter",
   "version": "0.2.0",
-  "description": "按规则修改请求头。",
+  "description": "Rewrite HTTP request headers by rules.",
   "permissions": ["storage", "declarativeNetRequest"],
   "host_permissions": ["<all_urls>"],
   "action": {

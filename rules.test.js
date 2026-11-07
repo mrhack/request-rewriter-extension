@@ -45,9 +45,9 @@ test("emptyRule: generates unique ids", () => {
   assert.notEqual(r1.id, r2.id);
 });
 
-test("emptyRule: default name is 新配置", () => {
+test("emptyRule: default name is New Config", () => {
   var r = emptyRule();
-  assert.equal(r.name, "新配置");
+  assert.equal(r.name, "New Config");
 });
 
 test("emptyRule: headerMods starts enabled", () => {
