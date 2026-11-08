@@ -133,22 +133,18 @@ async function clearDNRRules() {
 
 async function setBadge(on) {
   try {
-    if (on) {
-      await chrome.action.setIcon({ path: { "16": "icon16.png", "32": "icon32.png", "48": "icon48.png", "128": "icon128.png" } });
-    } else {
-      const size = 128;
-      const canvas = new OffscreenCanvas(size, size);
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#555';
-      ctx.beginPath();
-      ctx.roundRect(8, 8, size - 16, size - 16, 20);
-      ctx.fill();
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 90px Arial, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('R', size / 2, size / 2 + 4);
-      await chrome.action.setIcon({ imageData: ctx.getImageData(0, 0, size, size) });
-    }
+    const size = 128;
+    const canvas = new OffscreenCanvas(size, size);
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = on ? '#00b894' : '#555';
+    ctx.beginPath();
+    ctx.roundRect(8, 8, size - 16, size - 16, 20);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 90px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('R', size / 2, size / 2 + 4);
+    await chrome.action.setIcon({ imageData: ctx.getImageData(0, 0, size, size) });
   } catch (e) {}
 }
