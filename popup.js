@@ -17,14 +17,14 @@ async function loadConfig() {
   try {
     var resp = await sendMessage({ type: 'getConfig' });
     if (resp && resp.ok) allConfigs = resp.config;
-  } catch(e) { console.error('loadConfig error:', e); }
+  } catch(e) {}
   if (!allConfigs || !allConfigs.rules) allConfigs = { rules: [] };
 }
 
 async function saveConfigToStorage() {
   try {
     await sendMessage({ type: 'saveConfig', config: allConfigs });
-  } catch(e) { console.error('saveConfig error:', e); }
+  } catch(e) {}
 }
 
 function serializeOne(card) {
@@ -315,7 +315,7 @@ async function refreshStatus() {
     var resp = await sendMessage({ type: 'status' });
     if (!resp.ok) throw new Error(resp.error);
     renderStatus(resp.enabled);
-  } catch(err) { console.error('status error:', err); }
+  } catch(err) {}
 }
 
 function renderStatus(enabled) {
@@ -346,7 +346,7 @@ function renderStatus(enabled) {
     }
     await refreshStatus();
   } catch(e) {
-    console.error('init error:', e);
+    // init error - silently ignore
     if (!cardContainer.children.length) showEmptyPlaceholder();
   }
 })();

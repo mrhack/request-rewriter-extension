@@ -44,7 +44,7 @@ async function handleMessage(message) {
     if (pluginEnabled) await syncDNRRules();
     return { ok: true };
   }
-  throw new Error("未知操作");
+  throw new Error("Unknown operation");
 }
 
 // ============================================================
@@ -65,7 +65,6 @@ async function loadConfig() {
       if (rule.responseMods) { delete rule.responseMods; migrated = true; }
     }
     if (migrated) await chrome.storage.local.set({ config });
-    if (migrated) console.log('[RW] config migrated to new format');
   }
   return config;
 }
@@ -111,25 +110,15 @@ function buildCondition(rule) {
 
 async function syncDNRRules() {
   const config = await loadConfig();
-  console.log('[RW] config rules count:', config.rules.length);
-  config.rules.forEach(r => console.log('[RW] rule:', r.name, 'enabled:', r.enabled, 'headerMods:', JSON.stringify(r.headerMods)));
   const newRules = buildDNRRules(config);
-  console.log('[RW] built DNR rules:', newRules.length);
   const existing = await chrome.declarativeNetRequest.getSessionRules();
   try {
     await chrome.declarativeNetRequest.updateSessionRules({
       removeRuleIds: existing.map(r => r.id),
       addRules: newRules,
     });
-    console.log('[RW] DNR rules synced OK, count:', newRules.length);
-    newRules.forEach(r => {
-      var ops = r.action.requestHeaders || [];
-      console.log('[RW] DNR rule id:', r.id, 'headers:', ops.map(o => o.header + '=' + o.value).join(', '), 'condition:', JSON.stringify(r.condition));
-    });
     const after = await chrome.declarativeNetRequest.getSessionRules();
-    console.log('[RW] verified session rules:', after.length);
   } catch (e) {
-    console.error('[RW] DNR updateSessionRules FAILED:', e.message, e);
   }
 }
 
@@ -140,7 +129,6 @@ async function clearDNRRules() {
       removeRuleIds: existing.map(r => r.id),
     });
   }
-  console.log('[RW] DNR rules cleared');
 }
 
 async function setBadge(on) {
@@ -158,7 +146,5 @@ async function setBadge(on) {
     ctx.textBaseline = 'middle';
     ctx.fillText('R', size / 2, size / 2 + 4);
     await chrome.action.setIcon({ imageData: ctx.getImageData(0, 0, size, size) });
-  } catch (e) {
-    console.error('[RW] setIcon failed:', e);
-  }
+  } catch (e) {}
 }
