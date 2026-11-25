@@ -1,4 +1,4 @@
-import { DEFAULT_CONFIG, validateConfig, emptyRule } from "./rules.js";
+import { DEFAULT_CONFIG, validateConfig, emptyRule, matchesUrl, isRegexPattern } from "./rules.js";
 
 var root = document.getElementById('app');
 var cardContainer = document.getElementById('card-container');
@@ -218,8 +218,9 @@ function bindCardEvents(card) {
       var p = regexInput.value.trim(), u = testInput.value.trim();
       if (!u) { matchStatus.textContent = ''; return; }
       if (!p) { matchStatus.textContent = 'Matches all'; matchStatus.style.color = '#888'; return; }
-      try { if (new RegExp(p).test(u)) { matchStatus.textContent = 'Matched'; matchStatus.style.color = '#00b894'; } else { matchStatus.textContent = 'Not matched'; matchStatus.style.color = '#e74c3c'; } }
-      catch(err) { matchStatus.textContent = 'Regex error'; matchStatus.style.color = '#fdcb6e'; }
+      var label = isRegexPattern(p) ? 'Regex' : 'Substring';
+      if (matchesUrl(p, u)) { matchStatus.textContent = 'Matched (' + label + ')'; matchStatus.style.color = '#00b894'; }
+      else { matchStatus.textContent = 'Not matched (' + label + ')'; matchStatus.style.color = '#e74c3c'; }
     }
     regexInput.addEventListener('input', testMatch);
     testInput.addEventListener('input', testMatch);

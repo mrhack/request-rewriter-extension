@@ -1,4 +1,5 @@
-import { DEFAULT_CONFIG, enabledRules, validateConfig } from "./rules.js";
+import { DEFAULT_CONFIG, validateConfig } from "./rules.js";
+import { buildDNRRules } from "./dnr.js";
 
 chrome.runtime.onInstalled.addListener(async () => {
   const { config } = await chrome.storage.local.get("config");
@@ -69,45 +70,6 @@ async function loadConfig() {
   return config;
 }
 
-function buildDNRRules(config) {
-  const rules = enabledRules(config);
-  const dnrRules = [];
-  let ruleId = 1;
-  for (const rule of rules) {
-    if (!rule.headerMods?.on) continue;
-    const headerOps = (rule.headerMods.rows || [])
-      .filter(row => row.k)
-      .map(row => ({
-        header: row.k,
-        operation: 'set',
-        value: String(row.v !== undefined ? row.v : ''),
-      }));
-    if (!headerOps.length) continue;
-    dnrRules.push({
-      id: ruleId++,
-      priority: 1,
-      action: { type: 'modifyHeaders', requestHeaders: headerOps },
-      condition: buildCondition(rule),
-    });
-  }
-  return dnrRules;
-}
-
-function buildCondition(rule) {
-  const cond = {};
-  const p = rule.matchPattern;
-  if (!p || !p.trim()) {
-    cond.urlFilter = '*';
-  } else {
-    if (/[\^\$\(\)\[\]\?\+\|\\]/.test(p)) {
-      cond.regexFilter = p;
-    } else {
-      cond.urlFilter = p;
-    }
-  }
-  return cond;
-}
-
 async function syncDNRRules() {
   const config = await loadConfig();
   const newRules = buildDNRRules(config);
@@ -117,7 +79,6 @@ async function syncDNRRules() {
       removeRuleIds: existing.map(r => r.id),
       addRules: newRules,
     });
-    const after = await chrome.declarativeNetRequest.getSessionRules();
   } catch (e) {
   }
 }

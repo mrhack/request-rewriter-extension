@@ -8,11 +8,12 @@ const popupJsRaw = readFileSync(new URL('./popup.js', import.meta.url), 'utf8');
 const rulesJsRaw = readFileSync(new URL('./rules.js', import.meta.url), 'utf8');
 
 const popupJs = popupJsRaw.replace(
-  'import { DEFAULT_CONFIG, validateConfig, emptyRule } from "./rules.js";',
+  'import { DEFAULT_CONFIG, validateConfig, emptyRule, matchesUrl, isRegexPattern } from "./rules.js";',
   ''
 );
 const rulesJs = rulesJsRaw
   .replace('export const DEFAULT_CONFIG', 'const DEFAULT_CONFIG')
+  .replace('export const ALL_RESOURCE_TYPES', 'const ALL_RESOURCE_TYPES')
   .replace(/export function /g, 'function ');
 
 function createMockChrome() {
@@ -326,6 +327,69 @@ describe('Old Format Migration', () => {
     const rows = dom.window.document.querySelectorAll('.header-section .header-rows .kv-row');
     assert.equal(rows.length, 1);
     assert.equal(rows[0].querySelectorAll('input')[0].value, 'X-Old');
+    dom.window.close();
+  });
+});
+
+describe('Test URL matching (must mirror real DNR behaviour)', () => {
+  async function typePattern(dom, pattern, url) {
+    const regexInput = dom.window.document.querySelector('.regex-input');
+    const testInput = dom.window.document.querySelector('.test-url-input');
+    const status = dom.window.document.querySelector('.match-status');
+    regexInput.value = pattern;
+    regexInput.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+    testInput.value = url;
+    testInput.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+    return status;
+  }
+
+  it('should report "Matches all" for an empty pattern', async () => {
+    const dom = await setupDom();
+    createCard(dom);
+    const status = await typePattern(dom, '', 'https://example.com/');
+    assert.equal(status.textContent, 'Matches all');
+    dom.window.close();
+  });
+
+  it('should match a plain substring pattern', async () => {
+    const dom = await setupDom();
+    createCard(dom);
+    const status = await typePattern(dom, 'api.example.com', 'https://api.example.com/users');
+    assert.match(status.textContent, /^Matched/);
+    dom.window.close();
+  });
+
+  it('should NOT match when the plain pattern is only a regex-like substring', async () => {
+    // Regression: the UI used to treat the pattern as a RegExp, so "example.com"
+    // matched "exampleXcom" here while the real DNR rule never fired.
+    const dom = await setupDom();
+    createCard(dom);
+    const status = await typePattern(dom, 'example.com', 'https://exampleXcom/');
+    assert.match(status.textContent, /^Not matched/);
+    dom.window.close();
+  });
+
+  it('should label regex patterns and match with regex semantics', async () => {
+    const dom = await setupDom();
+    createCard(dom);
+    const status = await typePattern(dom, '^https://api\\.example\\.com/', 'https://api.example.com/u');
+    assert.equal(status.textContent, 'Matched (Regex)');
+    dom.window.close();
+  });
+
+  it('should report "Not matched (Regex)" when regex does not apply', async () => {
+    const dom = await setupDom();
+    createCard(dom);
+    const status = await typePattern(dom, '^https://api\\.example\\.com/', 'https://other.com/u');
+    assert.equal(status.textContent, 'Not matched (Regex)');
+    dom.window.close();
+  });
+
+  it('should clear the status when the test URL is emptied', async () => {
+    const dom = await setupDom();
+    createCard(dom);
+    const status = await typePattern(dom, 'api', '');
+    assert.equal(status.textContent, '');
     dom.window.close();
   });
 });
